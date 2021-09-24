@@ -1,19 +1,17 @@
 //! Program entrypoint
 
-use crate::processor::Processor;
 use solana_program::{
-    account_info::AccountInfo, entrypoint, entrypoint::ProgramResult,
-    program_error::PrintProgramError, pubkey::Pubkey,
+    account_info::AccountInfo, clock::Clock, entrypoint, entrypoint::ProgramResult, msg,
+    pubkey::Pubkey, sysvar::Sysvar,
 };
 
 entrypoint!(process_instruction);
 fn process_instruction(
-    program_id: &Pubkey,
-    accounts: &[AccountInfo],
-    instruction_data: &[u8],
+    _program_id: &Pubkey,
+    _accounts: &[AccountInfo],
+    _instruction_data: &[u8],
 ) -> ProgramResult {
-    if let Err(error) = Processor::process(program_id, accounts, instruction_data) {
-        return Err(error);
-    }
+    let clock = Clock::get()?;
+    msg!("unix_timestamp = {}", clock.unix_timestamp);
     Ok(())
 }
